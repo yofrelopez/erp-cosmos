@@ -96,7 +96,7 @@ const fecha = new Date(quote.created_at);
           product.subtotal.toFixed(2),
         ];
       }),
-      foot: [['', '', 'Total', 'S/.', '567.45']],
+      foot: [['', '', 'Total', 'S/.', quote.total.toFixed(2)]],
 
     startY: 100, // Inicia la tabla 60 unidades hacia abajo desde el inicio de la página
     margin: { top: 10, right: 20, bottom: 50, left: 20 }, // Establece los márgenes de la tabla
