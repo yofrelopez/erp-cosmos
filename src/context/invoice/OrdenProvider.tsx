@@ -1,6 +1,5 @@
 import { FC, ReactNode, useState } from "react"
 import { OrdenContext } from "./OrdenContext";
-import { useNavigate } from 'react-router-dom';
 import { IOrden } from "../../interface/interfaces";
 import { IOrdenItems } from "../../interface/interfaces";
 import { supabase } from "../../supabase/client";
@@ -16,7 +15,6 @@ interface Props {
 
 const OrdenProvider:FC<Props> = ({children}) => {
 
-    const navigate = useNavigate()
 
     const [newOrden, setNewOrden] = useState<IOrden | null | undefined>(null)
 
