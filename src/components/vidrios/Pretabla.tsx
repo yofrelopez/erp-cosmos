@@ -17,7 +17,7 @@ const Pretabla = () => {
 
   const { nombre, color, textura, espesor } = especificaciones || {}
 
-  const { largo, alto, cantidad, descuento, pulido, biselado } = medidas || {}
+  const { largo, alto, cantidad} = medidas || {}
 
   const catg = especificaciones?.categoria === 1 ? 'Vidrio' : 'Espejo'
 
