@@ -1,0 +1,82 @@
+
+* {
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+}
+.main-container {
+    display: flex;
+  }
+
+  main {
+    padding: 10px;
+    flex-grow: 1;
+  }
+
+.sidebar {
+    background: rgb(0, 7, 61);
+    color: aliceblue;
+    height: 100vh;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    height: 30px;
+    padding: 10px;
+}
+
+.search input {
+    border: none;
+    width: 160px;
+    margin-left: 10px;
+    border-radius: 5px;
+    background: seashell;
+    padding: 5px 10px;
+}
+
+.link {
+    display: flex;
+    color: aliceblue;
+    gap: 10px;   
+    padding: 10px;
+    text-decoration: none;
+    font-size: large;
+    transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+
+.link:hover {
+    border-right: 4px solid seashell;
+    transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    background: rgb(45, 51, 89);
+
+}
+
+/* Sidebar */
+.sidebar {
+    background: rgb(0, 7, 61);
+    color: white;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+
+/* modificar el tamaño del input check switch del componente FormVidrios  */
+
+
+.my-switch-container .my-switch {
+    /* Estilos para el switch */
+    /* Modifica el tamaño según tus necesidades */
+    transform: scale(2.5, 2.5); /* Ejemplo: aumentar el tamaño al 150% */
+
+  }
+
+  .hide-column {
+    display: none;
+  }
+  
