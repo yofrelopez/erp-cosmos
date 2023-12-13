@@ -17,6 +17,8 @@ interface ContextProps {
     setIsActiveBoton2: (isActiveBoton2: boolean) => void,
     isActiveReset: boolean,
     setIsActiveReset: (isActiveReset: boolean) => void
+    activeMenuBotones: string,
+    setActiveMenuBotones: (activeMenuBotones: string) => void
 }
 
 

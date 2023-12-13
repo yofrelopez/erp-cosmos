@@ -26,7 +26,7 @@ const ShoppingCart = () => {
             <th>Producto</th>
             <th>Descripción</th>
             
-            <th>P. Un.</th>
+            <th>P.Un.</th>
             <th>Cantidad</th>
             <th>Subtotal</th>
             <th>Acciones</th>

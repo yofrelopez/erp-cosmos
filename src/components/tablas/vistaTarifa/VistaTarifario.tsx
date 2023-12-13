@@ -17,7 +17,7 @@ const VistaTarifario = () => {
 
 
   useEffect(() => {
-    getTarifarioVidrios()
+    getTarifarioVidrios('*')
   }, [])
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const VistaTarifario = () => {
 
   useEffect(() => {
     if(escucharCambios){
-      getTarifarioVidrios()
+      getTarifarioVidrios('*')
       setEscucharCambios(false)
     }
   }, [escucharCambios])

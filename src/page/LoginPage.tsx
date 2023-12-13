@@ -43,7 +43,7 @@ const LoginPage: React.FC = () => {
       <div className="form-signin w-100 m-auto">
           <form onSubmit={handleSubmit}>
               <img className="mb-4" src="/logo_2.png" alt="" width="110" height="57" />
-              <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
+              <h1 className="h3 mb-3 fw-normal">Please Login</h1>
 
               <div className="form-floating">
 

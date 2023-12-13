@@ -17,7 +17,7 @@ const Pretabla = () => {
 
   const { nombre, color, textura, espesor } = especificaciones || {}
 
-  const { largo, alto, cantidad} = medidas || {}
+  const { largo, alto, cantidad, pulido, biselado } = medidas || {}
 
   const catg = especificaciones?.categoria === 1 ? 'Vidrio' : 'Espejo'
 
@@ -76,7 +76,7 @@ const Pretabla = () => {
       <tbody>
         <tr className="table align-middle">
           <td > {`${largo} x ${alto}`} </td>
-          <td > {`${catg} ${nombre} ${espesor} ${color} ${textura}`} </td>
+          <td > {`${catg} ${nombre} ${espesor} ${color} ${textura} ${pulido ? 'pulido': ''} ${biselado ? 'biselado':''}` } </td>
           <td > {preFt2.toFixed(2)} </td>
           <td > {`S/.${precioUnitario?.toFixed(2)}`} </td>
           <td> {cantidad} </td>

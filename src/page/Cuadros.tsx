@@ -6,7 +6,7 @@ import PreTablaCuadro from "../components/cuadros/PreTablaCuadro"
 
 const Cuadros = () => {
   return (
-    <div className="container py-4">
+    <div className="container py-4" style={{'padding':'0 50px'}}>
 
         <FormCuadros />
         <PreTablaCuadro />

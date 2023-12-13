@@ -5,6 +5,7 @@ import { supabase } from '../../supabase/client';
 import { AuthContext } from '../../context/auth/AuthContext';
 import { generatePDF } from '../../utils/pdfGenerator';
 import { QuoteProducts } from '../../interface/interfaces';
+import { clientContact } from '../../interface/interfaces';
 
 
 
@@ -12,6 +13,7 @@ interface QuoteModalProps {
   buttonLabel: ReactNode;
   className?: string;
   quote: modalQuote;
+  contactClient?: clientContact;
 }
 
 
@@ -21,6 +23,8 @@ const QuoteModal: React.FC<QuoteModalProps> = ({ buttonLabel, className, quote }
   const { isLoggedIn } = useContext(AuthContext)
 
   const [products, setProducts] = useState<QuoteProducts[] | [] >([])
+
+  const [contact, setContact] = useState<clientContact | undefined>(undefined)
 
   const [modal, setModal] = useState(false);
 
@@ -41,13 +45,27 @@ const QuoteModal: React.FC<QuoteModalProps> = ({ buttonLabel, className, quote }
       return
     }
     setProducts(data as QuoteProducts[])
+  }
 
+  // hacer una consulta a supabase para traer de la tabla cientes, el telefono, el email y la direccion del cliente que coincida con el id_cliente de la tabla ordenes
+  const fetchContact = async () => {
+
+    const { data, error } = await supabase
+      .from('clientes')
+      .select('telefono, email, direccion')
+      .eq('id_cliente', quote.id_cliente)
+    if (error) {
+      console.log(error)
+      return
+    }
+    setContact(data?.[0] as clientContact)
   }
   
   
   useEffect(() => {
     if(isLoggedIn){
       fetchData()
+      fetchContact()
     }
   }, [isLoggedIn])
 
@@ -61,9 +79,20 @@ const QuoteModal: React.FC<QuoteModalProps> = ({ buttonLabel, className, quote }
         <ModalHeader toggle={toggle}>Cotización ID: {quote.id_serie}</ModalHeader>
         <ModalBody>
           <h5>Información del Cliente</h5>
-          <p>Nombre: {quote.nombres} {quote.apellidos}</p>
-          <p>DNI/RUC: {quote.id_cliente}</p>
-          <p>Fecha: {date.toLocaleString()}</p>
+          <div className='row d-flex'>
+            <p className='col-6 mb-0'> <b>Nombre:</b> {quote.nombres} {quote.apellidos}</p>
+            <div className='d-flex col-6 mb-0'>
+              <p className='pe-4 mb-0'><b>DNI/RUC: </b>{quote.id_cliente}  </p>
+              <p className='mb-0'><b>Teléfono: </b> {contact?.telefono}</p>
+            </div>
+            <div className='d-flex col-6'>
+              <p><b>Email: </b> {contact?.email}</p>
+            </div>
+            <div className='col-6'>
+              <p className='mb-0'><b>Dirección: </b> {contact?.direccion}</p>
+              <p className='col-6' > <b>Fecha: </b> {date.toLocaleString()}</p>
+            </div>
+          </div>
 
           <h5>Productos</h5>
           <Table>
@@ -96,7 +125,7 @@ const QuoteModal: React.FC<QuoteModalProps> = ({ buttonLabel, className, quote }
         <ModalFooter className='d-flex justify-content-between'>
           
           <Button color="warning" onClick={toggle}>Cerrar</Button>
-          <Button color="primary" onClick={()=>generatePDF(quote, products)}>Descargar PDF</Button>
+          <Button color="primary" onClick={()=>generatePDF(quote, products, contact)}>Descargar PDF</Button>
           <h5>Total: S/.{quote.total.toFixed(2)}</h5>
         </ModalFooter>
       </Modal>

@@ -19,6 +19,7 @@ import CuadrosProviderContext from './context/cuadros/CuadrosProvider';
 import Cart from './page/Cart';
 import OrdenProvider from './context/invoice/OrdenProvider';
 import ListaCotizaciones from './components/cotizaciones/ListaCotizaciones';
+import FormVS from './components/ventaServicios/FormVS';
 
 
 
@@ -52,6 +53,7 @@ function App() {
                         } />
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/tarifario" element={<TarifarioPage />} /> 
+                        <Route path="/ventaservicios" element={<FormVS />} /> 
                         <Route path="/vidrios" element={<Vidrios />} />                   
                         <Route path="/carrito" element={<Cart />} />
                         <Route path="/cuadros" element={<Cuadros />} />

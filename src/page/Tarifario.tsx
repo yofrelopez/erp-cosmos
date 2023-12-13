@@ -7,8 +7,8 @@ import VistaTarifario from '../components/tablas/vistaTarifa/VistaTarifario'
 
 const TarifarioPage: React.FC = () => {
   return (
-    <div>
-      <div className='row'>
+    <div className='container'>
+      <div className='row container pt-4'>
 
         <div className='col-5'>
           <TarifarioVidrios />

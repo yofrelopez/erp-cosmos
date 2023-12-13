@@ -1,12 +1,12 @@
 // pdfGenerator.ts
 import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable'
-import { modalQuote } from "../interface/interfaces";
+import { clientContact, modalQuote } from "../interface/interfaces";
 import { QuoteProducts } from "../interface/interfaces";
 
 
 
-export const generatePDF = (quote: modalQuote, products: QuoteProducts[]|[]) => {
+export const generatePDF = (quote: modalQuote, products: QuoteProducts[]|[], contact: clientContact | undefined ) => {
   const doc = new jsPDF();
 
   const aspectRatio = 1.96; // La relación de aspecto de la imagen
@@ -20,11 +20,11 @@ export const generatePDF = (quote: modalQuote, products: QuoteProducts[]|[]) => 
 
    // Añade los datos de la empresa debajo del logo
    doc.setFontSize(10); // Letras pequeñas
-   doc.text('Razón social: Mi Empresa', 225, 35);
-   doc.text('RUC: 123456789', 25, 40);
-   doc.text('URL: www.miempresa.com', 25, 45);
-   doc.text('Teléfono: (123) 456-7890', 25, 50);
-   doc.text('Dirección: Calle Principal 123', 25, 55);
+   doc.text('Razón social: V&D COSMOS S.R.L.', 225, 35);
+   doc.text('RUC: 20609799090', 25, 40);
+   doc.text('URL: vdcosmos.com', 25, 45);
+   doc.text('Teléfono: 994 260 216', 25, 50);
+   doc.text('Dirección: Jirón Arequipa 230 Barranca', 25, 55);
  
    // Añade la identificación del documento en la columna de la derecha
    doc.setFontSize(18); // Letras de tamaño principal
@@ -68,9 +68,9 @@ const fecha = new Date(quote.created_at);
     // Añade los datos reales del cliente
     doc.setTextColor(0, 0, 0); // Color de texto
     doc.text(quote.nombres + '' + quote.apellidos, 52, 78); // Añade margen al texto
-    doc.text('Calle Principal 123', 52, 83); // Añade margen al texto
-    doc.text('(123) 456-7890', 52, 88); // Añade margen al texto
-    doc.text('correo@micorreo.com', 52, 93); // Añade margen al texto
+    doc.text(contact?.direccion + '', 52, 83); // Direccion - Añade margen al texto
+    doc.text(contact?.telefono + '' , 52, 88); // Telefono - Añade margen al texto
+    doc.text(contact?.email + '' , 52, 93); // Email - Añade margen al texto
     
 
  

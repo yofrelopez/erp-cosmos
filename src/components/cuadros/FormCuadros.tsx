@@ -68,6 +68,7 @@ const FormCuadros = () => {
         reset({
             ...formCuadroTemporal
         })
+        setItemCuadro(null)
     }
 
     const handleReset = () => {
@@ -131,7 +132,7 @@ const FormCuadros = () => {
             <legend className="text-body-tertiary">Medidas</legend>
             
 
-            <div className="col-4">
+            <div className="col-6 col-md-4">
                 <label htmlFor="largo" className="form-label">Largo</label>
                 <div className="input-group mb-3">
                     <input type="number"
@@ -157,7 +158,7 @@ const FormCuadros = () => {
             </div>
 
 
-            <div className="col-4">
+            <div className="col-6 col-md-4">
                 <label htmlFor="alto" className="form-label">Alto</label>
                 <div className="input-group mb-3">
                     <input type="number"
@@ -178,7 +179,7 @@ const FormCuadros = () => {
             </div>
 
 
-            <div className="col-4">
+            <div className="col-6 col-md-4">
                 <label htmlFor="cantidad" className="form-label">Cantidad</label>
                 <div className="input-group mb-3">
                     <input type="number"
@@ -208,7 +209,7 @@ const FormCuadros = () => {
 
 
 
-            <div className="col-3">
+            <div className="col-6 col-md-3">
                 <label htmlFor="margen" className="form-label">Margen</label>
                 <div className=" mb-3">
                     <select id="margen"
@@ -228,7 +229,7 @@ const FormCuadros = () => {
                 {/* {errors.descuento && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>} */}
             </div>
 
-            <div className="col-3">
+            <div className="col-6 col-md-3">
                 <label htmlFor="fondoTipo" className="form-label">Tipo de Fondo</label>
                 <div className=" mb-3">
                     <select id="fondoTipo"
@@ -250,7 +251,7 @@ const FormCuadros = () => {
             </div>
 
 
-            <div className="col-3">
+            <div className="col-6 col-md-3">
                 <label htmlFor="fondoColor" className="form-label">Color</label>
                 <div className="mb-3">
                     <input type="text"
@@ -270,7 +271,7 @@ const FormCuadros = () => {
 
 
 
-            <div className="col-3">
+            <div className="col-6 col-md-3">
                 <label htmlFor="vidrio" className="form-label">Vidrio</label>
                 <div className="mb-3">
                     <select id="vidrio"
@@ -300,7 +301,7 @@ const FormCuadros = () => {
 
 
 
-            <div className="col-3">
+            <div className="col-6 col-md-3">
                 <label htmlFor="molduraEspesor" className="form-label">Espesor</label>
                 <div className=" mb-3">
                     <select id="molduraEspesor"
@@ -322,7 +323,7 @@ const FormCuadros = () => {
                 {/* {errors.descuento && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>} */}
             </div>
 
-            <div className="col-3">
+            <div className="col-6 col-md-3">
                 <label htmlFor="molduraTextura" className="form-label">Textura</label>
                 <div className=" mb-3">
                     <select id="molduraTextura"
@@ -352,7 +353,7 @@ const FormCuadros = () => {
 
 
 
-            <div className="col-3">
+            <div className="col-6 col-md-3">
                 <label htmlFor="molduraColor" className="form-label">Color</label>
                 <div className="mb-3">
                     <input type="text"
@@ -371,7 +372,7 @@ const FormCuadros = () => {
 
 
 
-            <div className="col-3">
+            <div className="col-6 col-md-3">
                 <label htmlFor="precioEsepcial" className="form-label">Precio Especial</label>
                 <div className="input-group mb-3">
                     <span className="input-group-text" id="precioEsepcial">S/.</span>
@@ -405,7 +406,7 @@ const FormCuadros = () => {
 
 
 
-            <div className="col-4 pb-3">
+            <div className="col-6 col-md-4 pb-3">
                 <label htmlFor="nordexEspaldar" className="form-label">Nordex Espaldar</label>
                 <div className="form-check form-switch my-switch-container ms-4 mt-2">
                     <input className="form-check-input my-switch"
@@ -421,7 +422,7 @@ const FormCuadros = () => {
             </div>
 
 
-            <div className="col-4 pb-3" >
+            <div className="col-6 col-md-4 pb-3" >
                 <label htmlFor="parante" className="form-label">Parante</label>
                 <div className="form-check form-switch my-switch-container ms-4 mt-2">
                     <input className="form-check-input my-switch"
@@ -437,7 +438,7 @@ const FormCuadros = () => {
             </div>
 
 
-            <div className="col-4 pb-3" >
+            <div className="col-6 col-md-4 pb-3" >
                 <label htmlFor="activePrecio" className="form-label">Activar Precio Especial</label>
                 <div className="form-check form-switch my-switch-container ms-4 mt-2">
                     <input className="form-check-input my-switch"
@@ -454,7 +455,7 @@ const FormCuadros = () => {
         
         </fieldset>
 
-            <div className='row g-3'>
+            <div className='row g-3 pb-4'>
 
                 <div className="d-grid col-6 py-4">
                     <button type="button" onClick={handleReset} className="btn btn-outline-warning">Reset</button>

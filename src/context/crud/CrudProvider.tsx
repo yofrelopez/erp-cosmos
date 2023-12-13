@@ -13,7 +13,6 @@ interface Props {
 
 const CrudProviderCtxt:FC<Props> = ({children}) => {
 
-
     // crear un estado para tarifario con typescript
 
     const [tarifarioVidrios, setTarifarioVidrios] = useState<any[] | undefined | null>(null)
@@ -24,21 +23,58 @@ const CrudProviderCtxt:FC<Props> = ({children}) => {
 
 
     // conectarme con supabase con la tabal productos para leer los datos y ordenarlos por espesor
+    // la funcion getTarifarioVidrios() recibe una variable tipo string que es el nombre de la categoria 
 
-    const getTarifarioVidrios = async () : Promise<boolean> => {
-        let { data , error } = await supabase
-            .from('productos')
-            .select('*')
-            .order('espesor', { ascending: true })
-        if (error) {
-            throw error
-            console.log('error', error)
-            return false         } 
-        else {
-            setTarifarioVidrios(data)
+    const getTarifarioVidrios = async ( selection: string ) : Promise<boolean | undefined > => {
 
-            return true
+        const categoriaId = () => {
+            if (selection === 'Vidrio') {
+                return 1
+            } else if (selection === 'Espejo') {
+                return 2
+            } else if (selection === 'Ventana') {
+                return 3
+            } else if (selection === 'Puerta') {
+                return 4
+            } else {
+                return '*'
+            }
         }
+
+        if( selection !== '*' ){
+            let { data , error } = await supabase
+                .from('productos')
+                .select('*')
+                .match({ categoria: categoriaId() })
+                .order('espesor', { ascending: true })
+            if (error) {
+                throw error
+                console.log('error', error)
+                return false         } 
+            else {
+                setTarifarioVidrios(data)
+    
+                return true
+            }
+        }
+
+        if(selection === '*'){
+            let { data , error } = await supabase
+                .from('productos')
+                .select('*')
+                .order('espesor', { ascending: true })
+            if (error) {
+                throw error
+                console.log('error', error)
+                return false         } 
+            else {
+                setTarifarioVidrios(data)
+    
+                return true
+            }
+        }
+
+
     }
 
     // eliminar un registro de la tabla productos
@@ -54,7 +90,7 @@ const CrudProviderCtxt:FC<Props> = ({children}) => {
             return false
         } else {
             console.log('data', data)
-            getTarifarioVidrios()
+            getTarifarioVidrios('*')
             return true
         }
     }
@@ -72,7 +108,7 @@ const CrudProviderCtxt:FC<Props> = ({children}) => {
             return false
         } else {
             console.log('data', data)
-            getTarifarioVidrios()
+            getTarifarioVidrios('*')
             return true
         }
     }

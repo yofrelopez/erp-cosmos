@@ -42,7 +42,7 @@ const FormVidrios = () => {
         if(data.alto > 0 && data.largo > 0){
             setPreFt2(calcFt2(Number(data.alto), Number(data.largo)))
             setFormData(data)
-            console.log(data)
+            console.log('Data del UseForm:', data)
             setIsActiveBoton(false)
             setIsActiveBoton2(false)                       
         } 
@@ -97,7 +97,7 @@ const FormVidrios = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="row g-3">
 
-            <div className="col-4">
+            <div className="col-6 col-md-4">
                 <label htmlFor="largo" className="form-label">Largo</label>
                 <div className="input-group mb-3">
                     <input type="number"
@@ -117,7 +117,7 @@ const FormVidrios = () => {
             </div>
 
 
-            <div className="col-4">
+            <div className="col-6 col-md-4">
                 <label htmlFor="alto" className="form-label">Alto</label>
                 <div className="input-group mb-3">
                     <input type="number"
@@ -137,7 +137,7 @@ const FormVidrios = () => {
             </div>
 
 
-            <div className="col-4">
+            <div className="col-6 col-md-4">
                 <label htmlFor="cantidad" className="form-label">Cantidad</label>
                 <div className="input-group mb-3">
                     <input type="number"
@@ -156,11 +156,12 @@ const FormVidrios = () => {
             </div>
 
 
-            <div className="col-4">
+            <div className="col-6 col-md-4">
                 <label htmlFor="descuento" className="form-label">Descuento</label>
                 <div className="input-group mb-3">
                     <select id="descuento"
                             className="form-select form-select-lg"
+                            disabled
                             {...register('descuento', {
                                 required: true
                             })}
@@ -180,10 +181,11 @@ const FormVidrios = () => {
             </div>
 
 
-            <div className="col-4">
+            <div className="col-6 col-md-4">
                 <label htmlFor="pulido" className="form-label">Pulido</label>
                 <div className="form-check form-switch my-switch-container ms-4 mt-2">
                     <input className="form-check-input my-switch"
+                            disabled
                             type="checkbox"
                             role="switch"
                             id="pulido" 
@@ -196,10 +198,11 @@ const FormVidrios = () => {
             </div>
 
 
-            <div className="col-4">
+            <div className="col-6 col-md-4">
                 <label htmlFor="biselado" className="form-label">Biselado</label>
                 <div className="form-check form-switch my-switch-container ms-4 mt-2">
                     <input className="form-check-input my-switch"
+                            disabled
                             type="checkbox"
                             role="switch"
                             id="biselado" 
@@ -211,12 +214,13 @@ const FormVidrios = () => {
                 {errors.biselado && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>}
             </div>
 
-
-            <div className="d-grid col-6">
-                <button type="button" onClick={resetForm} className="btn btn-outline-warning">Reset</button>
-            </div>
-            <div className="d-grid col-6">
-                <button type="submit" className="btn btn-outline-primary">Calcular</button>
+            <div className="row g-3">
+                <div className="d-grid col-6">
+                    <button type="button" onClick={resetForm} className="btn btn-outline-warning">Reset</button>
+                </div>
+                <div className="d-grid col-6">
+                    <button type="submit" className="btn btn-outline-primary">Calcular</button>
+                </div>
             </div>
 
 

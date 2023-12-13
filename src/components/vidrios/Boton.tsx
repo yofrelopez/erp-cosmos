@@ -37,6 +37,9 @@ const Boton:FC<Props> = ({vidrio}) => {
 
     const getPrecioVidrio = () => {
         if(vidrio && formData){
+            
+            const metroLineal = ((Number(formData.largo) + Number(formData.alto)) * 2) / 100
+            const precioPulido = formData.pulido ? metroLineal * 12 : 0
 
             const vidrioPrecio:IVidrioCliente = {
                 especificaciones: {
@@ -58,7 +61,7 @@ const Boton:FC<Props> = ({vidrio}) => {
                     pulido: formData?.pulido,
                     biselado: formData?.biselado,
                 },
-                precioUnitario: preFt2 * vidrio.venta,
+                precioUnitario: (preFt2 * vidrio.venta) + precioPulido,
                 precioSubTotal: Number(preFt2 * vidrio.venta) * Number(formData.cantidad),
             }
 
@@ -81,19 +84,21 @@ const Boton:FC<Props> = ({vidrio}) => {
 
 
   return (
-    <div className='col-3 d-grid mb-2'>
-        <button
-            onClick={handleBoton}
-            type="button"
-            disabled={isActiveBoton}
-            className={`btn ${color} btn-lg`}
-        >
-            {categoria}<br/>
-            <small> {vidrio?.nombre}</small>
-            <small> {vidrio?.espesor}</small>
-        </button>
 
-    </div>
+
+        <div className='col-5 col-sm-3 d-grid m-1'>
+            <button
+                onClick={handleBoton}
+                type="button"
+                disabled={isActiveBoton}
+                className={`btn ${color} btn-lg`}
+            >
+                <p className='fs-6 mb-0'> {categoria} </p>
+                <p className='fs-6 mb-0'> {vidrio?.nombre}</p>
+                <p className='fs-6 mb-0'> {vidrio?.espesor}</p>
+            </button>
+        </div>
+
   )
 }
 

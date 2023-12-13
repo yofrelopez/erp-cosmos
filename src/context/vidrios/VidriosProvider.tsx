@@ -25,6 +25,8 @@ const VidriosProviderContext:FC<Props> = ({children}) => {
 
     const [ isActiveReset, setIsActiveReset ] = useState<boolean>(false)
 
+    const [activeMenuBotones, setActiveMenuBotones] = useState<string>('Vidrio');
+
     const calcFt2 = (ancho: number, alto: number) => {
         const result = (ancho * alto) / 900
         return result
@@ -37,7 +39,8 @@ const VidriosProviderContext:FC<Props> = ({children}) => {
         value={{formData, setFormData, vidrioCliente,
         setVidrioCliente, preFt2, setPreFt2, calcFt2,
         isActiveBoton, setIsActiveBoton,
-        isActiveBoton2, setIsActiveBoton2, isActiveReset, setIsActiveReset }}>
+        isActiveBoton2, setIsActiveBoton2, isActiveReset, setIsActiveReset,
+        activeMenuBotones, setActiveMenuBotones }}>
 
         {children}
 

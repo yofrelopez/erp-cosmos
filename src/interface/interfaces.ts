@@ -92,6 +92,11 @@ export interface modalQuote {
     subtotal: number;
   }
 
+  export interface clientContact {
+    direccion: string;
+    telefono: string;
+    email: string;
+  }
 
 /*
 export interface ITarifarioVidrios {

@@ -21,8 +21,8 @@ export const RUTAS:IRuta[] =
         icon: <FaImage />,
     },
     {
-        path:'/ventanas',
-        name:'Ventanas',
+        path:'/ventaservicios',
+        name:'Otros',
         icon: <FaWindowMaximize />,
     },
     {

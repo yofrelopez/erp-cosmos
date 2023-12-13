@@ -12,15 +12,10 @@ a {
     display: flex;
   }
 
-  main {
-    padding: 10px;
-    flex-grow: 1;
-  }
 
 .sidebar {
     background: rgb(0, 7, 61);
     color: aliceblue;
-    height: 100vh;
 }
 
 .search {
@@ -58,12 +53,12 @@ a {
 }
 
 /* Sidebar */
-.sidebar {
+/* .sidebar {
     background: rgb(0, 7, 61);
     color: white;
     height: 100vh;
     overflow-y: auto;
-  }
+  } */
 
 
 /* modificar el tamaño del input check switch del componente FormVidrios  */
