@@ -1,14 +1,18 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { CuadrosContext } from '../../context/cuadros/CuadrosContext';
 import { CartContext } from '../../context/cart/CartContext';
 import { useForm } from 'react-hook-form';
 import { ICuadro } from '../../interface/interfaces';
 import { v4 as uuidv4 } from 'uuid';
+import { SimpleYMate, getPrecioVidrioSimpleYMate } from '../../utils/funcionesSupabase';
+import { VidriosContext } from '../../context/vidrios/VidriosContext';
+
 
 
 
 const FormCuadros = () => {
 
+    const { setVidrioSimpleyMate } = useContext(VidriosContext)
 
     const { addItem } = useContext(CartContext)
 
@@ -21,6 +25,11 @@ const FormCuadros = () => {
     const [ precioEspecialIsActive, setPrecioEspecialIsActive ] = useState(false)
 
     const [ formCuadroTemporal, setFormCuadroTemporal ] = useState<ICuadro>({} as ICuadro)
+
+
+    // obtener precio de vidrio simple y mate
+
+
     
 
     const { register, formState: { errors }, handleSubmit, reset } = useForm<ICuadro>({
@@ -33,7 +42,7 @@ const FormCuadros = () => {
             fondoTipo: '',
             fondoColor: '',
             vidrio: 'simple',
-            molduraEspesor: 'media',
+            molduraEspesor: 'MDM-NC',
             molduraTextura: '',
             precioEsepcial: 0,
             molduraColor: '',
@@ -80,7 +89,7 @@ const FormCuadros = () => {
             fondoTipo: '',
             fondoColor: '',
             vidrio: 'simple',
-            molduraEspesor: 'media',
+            molduraEspesor: 'MDM-NC',
             molduraTextura: '',
             precioEsepcial: 0,
             molduraColor: '',
@@ -109,7 +118,7 @@ const FormCuadros = () => {
                 fondoTipo: '',
                 fondoColor: '',
                 vidrio: 'simple',
-                molduraEspesor: 'media',
+                molduraEspesor: 'MDM-NC',
                 molduraTextura: '',
                 precioEsepcial: 0,
                 molduraColor: '',
@@ -120,6 +129,21 @@ const FormCuadros = () => {
         
     }
 
+    // obtener precios de vidrio simple y mate con useEffect importando la función getPrecioVidrioSimpleYMate()
+
+    useEffect(() => {
+        const fetchPrecios = async () => {
+            try {
+                const precios = await getPrecioVidrioSimpleYMate();
+                setVidrioSimpleyMate(precios as SimpleYMate[]);
+                console.log('precios simple y mate', precios);
+            } catch (error) {
+                console.error('Error al obtener los precios', error);
+            }
+        };
+    
+        fetchPrecios();
+    }, []);
 
 
 
@@ -312,11 +336,11 @@ const FormCuadros = () => {
                             /* onChange={()=>setIsActiveBoton(true)} */
 
                         >
-                        <option value='media'>1/2"</option>
-                        <option value='tres-cuartos'>3/4"</option>
-                        <option value='una-pulgada'>1"</option>
-                        <option value='pulgada-media'>1 1/2"</option>
-                        <option value='dos-pulgadas'>2"</option>
+                        <option value='MDM-NC'>1/2"</option>
+                        <option value='MDT-NC'>3/4"</option>
+                        <option value='MDU-NC'>1"</option>
+                        <option value='MDUM-MC'>1 1/2"</option>
+                        <option value='MDD-NC'>2"</option>
 
                     </select>
                 </div>

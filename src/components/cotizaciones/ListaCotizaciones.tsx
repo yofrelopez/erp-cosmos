@@ -13,6 +13,17 @@ import { AiOutlineEye } from "react-icons/ai";
 import { modalQuote } from "../../interface/interfaces";
 import QuoteModal from "./QuoteModal";
 
+import { FaRegTimesCircle } from "react-icons/fa";
+import { TbLoader } from "react-icons/tb";
+import { IoMdCheckboxOutline } from "react-icons/io";
+
+
+
+
+
+
+
+
 
 
 
@@ -57,37 +68,81 @@ const ListaCotizaciones = () => {
       header: "Fecha",
       accessorKey: "created_at",
       footer: "Fecha",
-      /* convertir timestamp en fecha simple: primero el año, luego el mes, y despues el dia, sepárados por guión.
-      Para los meses del 01 al 09, agregarles el 0 al inicio*/
+      /* Ejemplo de formato de fecha: 2021-09-30 al años 2021 solo colocar el numero 21 y quedaría así: 21-09-30*/
       cell: ({ getValue }: { getValue: () => any }) => {
         const value = getValue();
-        const date = new Date(value);
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1;
-        const day = date.getDate();
-        const monthWithZero = month < 10 ? `0${month}` : month;
-        const dayWithZero = day < 10 ? `0${day}` : day;
-        return `${year}-${monthWithZero}-${dayWithZero}`;
+        if (value) {
+          const date = new Date(value);
+          const year = date.getFullYear().toString().slice(2);
+          const month = (date.getMonth() + 1).toString().padStart(2, "0");
+          const day = date.getDate().toString().padStart(2, "0");
+          return `${year}-${month}-${day}`;
+        }
+        return "";
+      },   
+    },
+    {
+      header: "Tp",
+      accessorKey: "ordenType",
+      footer: "Tp",
+      /* Si el valor es igual a "Proforma" escribir P en color naranja con fondo amarillo pastel;
+      si es igual a "Contrato" escribir C en azul con fondo celeste pastel */
+      cell: ({ getValue }: { getValue: () => any }) => {
+        const value = getValue();
+        return value === "Proforma" ? (
+          <span style={{ color: "#FFA500", background:'#FFFACD', paddingInline: '5px' }}>P</span>
+        ) : (
+          <span style={{ color: "#00BFFF", background:'#B0E2FF', paddingInline: '5px' }}>C</span>
+        );
+      },
+
+    },
+    {
+      header: "Fch-Entr.",
+      accessorKey: "fechaEntrega",
+      footer: "Fch-Entr.",
+      /* Ejemplo de formato de fecha: 2021-09-30 al años 2021 solo colocar el numero 21 y quedaría así: 21-09-30*/
+      cell: ({ getValue }: { getValue: () => any }) => {
+        const value = getValue();
+        if (value) {
+          const date = new Date(value);
+          const year = date.getFullYear().toString().slice(2);
+          const month = (date.getMonth() + 1).toString().padStart(2, "0");
+          const day = date.getDate().toString().padStart(2, "0");
+          return `${year}-${month}-${day}`;
+        }
+        return "";
       },
 
 
+      /* si el valor es igual a "Pendiente" escribir 'P' en letra color rojo; si es "Entregado" escribir 'E' en letra azul */
+     /*  cell: ({ getValue }: { getValue: () => any }) => {
+        const value = getValue();
+        return value === "Pendiente" ? (
+          <span style={{ color: "#E1497F", background:'#FBBAD1', paddingInline: '5px' }}>P</span>
+        ) : (
+          <span style={{ color: "#00CE6D", background:'#A7FAC9', paddingInline: '5px' }}>E</span>
+        );
+      }, */
     },
     {
-      header: "Tipo",
-      accessorKey: "ordenType",
-      footer: "Tipo",
-    },
-    {
-      header: "Entrega",
-      accessorKey: "fechaEntrega",
-      footer: "Entrega",
-    },
-    {
-      header: "Servicio",
+      header: "Svc.",
       accessorKey: "estadoServicio",
-      footer: "Servicio",
+      footer: "Svc.",
+      /* Si es "Pendiente" mostrar el icono <LiaTimesCircleSolid/> en color; si es "En-Proceso" mostrar el
+      icono <TbLoader/> en color naranja; si es "Terminado mostrar el icono <IoMdCheckboxOutline/> en color verde*/
+      cell: ({ getValue }: { getValue: () => any }) => {
+        const value = getValue();
+        return value === "Pendiente" ? (
+          <FaRegTimesCircle style={{ color: "#E1497F" }} />
+        ) : value === "En-Proceso" ? (
+          <TbLoader style={{ color: "#FFA500" }} />
+        ) : (
+          <IoMdCheckboxOutline style={{ color: "#00CE6D" }} />
+        );
+      },
     },
-    {
+/*     {
       header: "Nombres",
       accessorKey: "nombres",
       footer: "Nombres",
@@ -96,7 +151,35 @@ const ListaCotizaciones = () => {
       header: "Apellidos",
       accessorKey: "apellidos",
       footer: "Apellidos",
+    }, */
+    /* Columna con el primer nombre del accessorKey: "nombres"; y el primer apellido del accessorKey: "apellidos" */
+    {
+      header: "Cliente",
+      accessorKey: "cliente",
+      footer: "Cliente",
+      cell: ({ row }: { row: Row<modalQuote> }) => {
+        const { nombres, apellidos } = row.original;
+        return `${nombres} ${apellidos.split(" ")[0]}`;
+      },
     },
+
+    /* Columa de Estado del pedido del accessorKey "estadoEntrega". Si es "Pendiente" colocar ícono  <TbLoader/> en color naranja;
+    si es "Entregado" mostrar el icono <IoMdCheckboxOutline/> en color verde */
+    {
+      header: "Entr.",
+      accessorKey: "estadoEntrega",
+      footer: "Entr.",
+      cell: ({ getValue }: { getValue: () => any }) => {
+        const value = getValue();
+        return value === "Pendiente" ? (
+          <TbLoader style={{ color: "#FFA500" }} />
+        ) : (
+          <IoMdCheckboxOutline style={{ color: "#00CE6D" }} />
+        );
+      },
+    },
+
+
     {
       header: "Total",
       accessorKey: "total",
@@ -143,7 +226,8 @@ const ListaCotizaciones = () => {
   const fetchData = async () => {
     try {
       const { data, error } = await supabase
-        .from("vista_ordenes_clientes")
+        /* .from("vista_ordenes_clientes") */
+        .from("vista_cotizaciones")
         .select("*")
         .order("created_at", { ascending: false });
       if (error) {

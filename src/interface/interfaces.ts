@@ -34,8 +34,8 @@ export interface ICuadro {
     fondoColor?: string;
     vidrio: 'simple' | 'mate';
     molduraEspesor:
-    'media' | 'tres-cuartos' | 'una-pulgada' |
-    'pulgada-media' | 'dos-pulgadas';
+    'MDM-NC' | 'MDT-NC' | 'MDU-NC' |
+    'MDUM-MC' | 'MDD-NC';
     molduraTextura: string;
     precioEsepcial: number;
     molduraColor: string;
@@ -67,6 +67,13 @@ export interface IOrden {
 export interface IOrdenItems {
     id_orden: string;
     items: IItem[];
+}
+
+export interface IObservaciones {
+    id_orden: string;
+    id_obs: string;
+    observacion: string;
+    item: string;
 }
 
 

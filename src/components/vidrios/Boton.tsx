@@ -20,7 +20,21 @@ const Boton:FC<Props> = ({vidrio}) => {
 
 
 
-    const categoria = vidrio?.categoria === 1 ? 'Vidrio' : 'Espejo'
+    let categoria = '';
+    //asignar a categoria el valor de la categoria del vidrio   del 1 al 4
+    if (vidrio?.categoria === 1) {
+        categoria = 'Vidrio'
+    } else if (vidrio?.categoria === 2) {
+        categoria = 'Espejo'
+    } else if (vidrio?.categoria === 4) {
+        categoria = 'Ventana'
+    } else if (vidrio?.categoria === 7) {
+        categoria = 'Puerta'
+    } else if(vidrio?.categoria === 8) {
+        categoria = 'Mampara'
+    };
+
+
     const espesor = vidrio?.espesor
     const getColor = () => {
        if (espesor === '2mm' || espesor === '3mm' ) {

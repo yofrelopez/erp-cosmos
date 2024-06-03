@@ -20,6 +20,7 @@ import Cart from './page/Cart';
 import OrdenProvider from './context/invoice/OrdenProvider';
 import ListaCotizaciones from './components/cotizaciones/ListaCotizaciones';
 import FormVS from './components/ventaServicios/FormVS';
+import TarifarioProvider from './context/tarifarioContext/TarifarioProvider';
 
 
 
@@ -34,6 +35,7 @@ function App() {
       <div>
         <AuthProviderCtxt>
           <CrudProviderCtxt>
+           <TarifarioProvider>
             <VidriosProviderContext>
               <CuadrosProviderContext>
                 <CartProviderCtxt>
@@ -52,11 +54,28 @@ function App() {
 
                         } />
                         <Route path="/login" element={<LoginPage />} />
-                        <Route path="/tarifario" element={<TarifarioPage />} /> 
+
+                        <Route path="/tarifario" element={
+                          <PrivateRoute>
+                            <TarifarioPage />
+                          </PrivateRoute>
+                        }/> 
+
                         <Route path="/ventaservicios" element={<FormVS />} /> 
-                        <Route path="/vidrios" element={<Vidrios />} />                   
+
+                        <Route path="/vidrios" element={
+                          <PrivateRoute>
+                            <Vidrios />
+                          </PrivateRoute>
+                        } />  
+
                         <Route path="/carrito" element={<Cart />} />
-                        <Route path="/cuadros" element={<Cuadros />} />
+
+                        <Route path="/cuadros" element={
+                          <PrivateRoute>
+                            <Cuadros />
+                          </PrivateRoute>
+                        } />
                         <Route path="/lista_cotizaciones" element={<ListaCotizaciones/>} />
                         <Route path="/*" element={<NotFound />} />
 
@@ -71,6 +90,7 @@ function App() {
                 </CartProviderCtxt>
               </CuadrosProviderContext>                    
             </VidriosProviderContext>
+            </TarifarioProvider>
           </CrudProviderCtxt>
         </AuthProviderCtxt>
       </div>

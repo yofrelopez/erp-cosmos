@@ -16,7 +16,6 @@ const HomePage = () => {
     cerrarSesion()
   }
 
-  
 
   return (
     <>

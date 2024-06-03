@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 import { IOrden, IOrdenItems } from '../../interface/interfaces';
+import { IObservacionesFetch } from '../../components/cotizaciones/Observacion';
 
 
 interface ContextProps {
@@ -9,6 +10,9 @@ interface ContextProps {
     setNewOrden: (orden: IOrden | null | undefined) => void;
     ordenItems: IOrdenItems;
     setOrdenItems: (ordenItems: IOrdenItems) => void;
+    observaciones: IObservacionesFetch[] | false;
+    setObservaciones: (observaciones: IObservacionesFetch[] | false) => void;
+
 
 }
 

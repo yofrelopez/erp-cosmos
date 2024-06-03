@@ -1,6 +1,7 @@
 import { createContext } from "react";
 import { IVidrioCliente } from "../../interface/interfaces"; 
 import { IVidrio } from "../../components/vidrios/FormVidrios";
+import { SimpleYMate } from "../../utils/funcionesSupabase";
 
 
 interface ContextProps {
@@ -18,7 +19,10 @@ interface ContextProps {
     isActiveReset: boolean,
     setIsActiveReset: (isActiveReset: boolean) => void
     activeMenuBotones: string,
-    setActiveMenuBotones: (activeMenuBotones: string) => void
+    setActiveMenuBotones: (activeMenuBotones: string) => void,
+    precioVidrioSimple: number,
+    setVidrioSimpleyMate: (precio:SimpleYMate[] ) => void,
+    precioVidrioMate: number,
 }
 
 

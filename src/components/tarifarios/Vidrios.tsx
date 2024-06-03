@@ -33,7 +33,9 @@ const initialValues: ITarifarioVidrios = {
 const TarifarioVidrios  = () => {
 
     const { productoParaActualizar, updateTarifarioVidrios, setProductoParaActualizar,
-            setEscucharCambios } = useContext(CrudContext)
+            setEscucharCambios } = useContext(CrudContext);
+
+    const [categoria, setCategoria] = useState<number>(1)
 
     const [formData, setFormData] = useState<ITarifarioVidrios | null>(null)
 
@@ -103,6 +105,11 @@ const TarifarioVidrios  = () => {
         }
     }, [formData])
 
+   // escuchar cambios en el campo de categorias
+
+
+
+
     useEffect(() => {
         if(productoParaActualizar) {
             reset(productoParaActualizar)
@@ -122,12 +129,23 @@ const TarifarioVidrios  = () => {
             <div className="col-md-4">
                 <label htmlFor="inputEmail4" className="form-label">Categoría</label>
                 <select className="form-select" {...register('categoria',{
+                    // onchage para signar valor al estado de categoria
+                    onChange: (e) => setCategoria(parseInt(e.target.value)),
                     required: true
                 })}>
                     <option value='1'>Vidrio</option>
                     <option value='2'>Espejo</option>
+                    <option value='3'>Ventana</option>
+                    <option value='4'>Puerta</option>
+                    <option value='5'>Moldura</option>
+                    <option value='6'>Aglomerados</option>
                 </select>
-                {errors.categoria && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>}
+
+                {
+                    errors.categoria && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>
+                }
+      
+
             </div>
 
             <div className="col-md-4">
@@ -145,49 +163,139 @@ const TarifarioVidrios  = () => {
                 })} />
                 {errors.code && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>}
             </div>
+            {/* codicionar div dependiento del valor de categoria */}
+            {
+                categoria === 1 || categoria === 2 || categoria === 3 ?
+                (
+                <div className="col-4">
+                    <label htmlFor="inputAddress2" className="form-label">Espesor</label>
+                    <select id="espesor" className="form-select" {...register('espesor', {
+                        required: true
+                    })}>
+                        <option value='2mm'>2mm</option>
+                        <option value='3mm'>3mm</option>
+                        <option value='4mm'>4mm</option>
+                        <option value='5mm'>5mm</option>
+                        <option value='5.5mm'>5.5mm</option>
+                        <option value='6mm'>6mm</option>
+                        <option value='8mm'>8mm</option>
+                        <option value='10mm'>10mm</option>
+                    </select>
+                    {errors.espesor && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>}
+                </div>
+                ) 
+                : false
+            }
+            {
+                categoria === 5 ?
+                (
+                <div className="col-4">
+                    <label htmlFor="inputAddress2" className="form-label">Espesor</label>
+                    <select id="espesor" className="form-select" {...register('espesor', {
+                        required: true
+                    })}>
+                        <option value='1/2"'> 1/2" </option>
+                        <option value='3/4"'> 3/4" </option>
+                        <option value='1"'> 1" </option>
+                        <option value='1 1/2"'> 1 1/2"</option>
+                        <option value='2"'> 2" </option>
+                    </select>
+                    {errors.espesor && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>}
+                </div>
+                )
+                : false
+            }
 
-            <div className="col-4">
-                <label htmlFor="inputAddress2" className="form-label">Espesor</label>
-                <select id="espesor" className="form-select" {...register('espesor', {
-                    required: true
-                })}>
-                    <option value='2mm'>2mm</option>
-                    <option value='3mm'>3mm</option>
-                    <option value='4mm'>4mm</option>
-                    <option value='5mm'>5mm</option>
-                    <option value='5.5mm'>5.5mm</option>
-                    <option value='6mm'>6mm</option>
-                    <option value='8mm'>8mm</option>
-                    <option value='10mm'>10mm</option>
-                </select>
-                {errors.espesor && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>}
-            </div>
+           {/* crear un campo de Espesor con input text para la categoria 6 */}
 
-            <div className="col-md-4">
-                <label htmlFor="inputCity" className="form-label">Color</label>
-                <select id="color" className="form-select" {...register('color', {
-                    required: true
-                })}>
-                    <option value='incoloro'>Incoloro</option>
-                    <option value='bronce'>Bronce</option>
-                    <option value='gris'>Gris</option>
-                    <option value='reflejante'>Reflejante</option>
-                    <option value='a color'>A color</option>
-                </select>
-                {errors.color && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>}
-            </div>
+            {
+                categoria === 6 ?
+                (
+                <div className="col-4">
+                    <label htmlFor="inputAddress2" className="form-label">Espesor</label>
+                    <input type="text" className="form-control" id="espesor" {...register('espesor', {
+                        required: true
+                    })} />
+                    {errors.espesor && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>}
+                </div>
+                )
+                : false
+            }
 
-            <div className="col-md-4">
-                <label htmlFor="inputState" className="form-label">Textura</label>
-                <select id="textrua" className="form-select" {...register('textura',{
-                    required: true
-                })}>
-                    <option value='liso'>Liso</option>
-                    <option value='catedral'>Catedral</option>
-                    <option value='pavonado'>Pavonado</option>
-                </select>
-                {errors.textura && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>}
-            </div>
+
+
+            {
+                categoria === 1 || categoria === 2 || categoria === 3 ?
+                (
+                    <div className="col-md-4">
+                        <label htmlFor="inputCity" className="form-label">Color</label>
+                        <select id="color" className="form-select" {...register('color', {
+                            required: true
+                        })}>
+                            <option value='incoloro'>Incoloro</option>
+                            <option value='bronce'>Bronce</option>
+                            <option value='gris'>Gris</option>
+                            <option value='reflejante'>Reflejante</option>
+                            <option value='a color'>A color</option>
+                        </select>
+                        {errors.color && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>}
+                    </div>
+                ) : false
+                
+            }
+
+            {
+                categoria === 5 || categoria === 6 ?
+                (
+                    <div className="col-md-4">
+                        <label htmlFor="inputCity" className="form-label">Color</label>
+                        <input type="text" className="form-control" id="color" {...register('color', {
+                            required: true
+                        })} />
+                        {errors.color && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>}
+                    </div>
+
+                ) : false
+            }
+
+            {
+                categoria === 1 || categoria === 2 || categoria === 3 ?
+                (
+                    <div className="col-md-4">
+                        <label htmlFor="inputState" className="form-label">Textura</label>
+                        <select id="textrua" className="form-select" {...register('textura',{
+                            required: true
+                        })}>
+                            <option value='liso'>Liso</option>
+                            <option value='catedral'>Catedral</option>
+                            <option value='pavonado'>Pavonado</option>
+                        </select>
+                        {errors.textura && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>}
+                    </div>
+
+                ) : false
+            }
+
+            {/* crear un campo de Textura de text input */}
+
+            {
+                categoria === 5 || categoria === 6 ? 
+                (
+                    <div className="col-md-4">
+                        <label htmlFor="inputState" className="form-label">Textura</label>
+                        <input type="text" className="form-control" id="textura" {...register('textura',{
+                            required: true
+                        })} />
+                        {errors.textura && <p className='alert alert-danger p-1'><small>Este campo es requerido</small></p>}
+                    </div>
+
+                ): false
+            }
+
+
+            
+
+            
 
             <div className='col-md-4'>
                 <label htmlFor="costo" className="form-label">Costo</label>

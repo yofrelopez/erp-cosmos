@@ -31,8 +31,8 @@ export const RUTAS:IRuta[] =
         icon: <FaDoorOpen />,
     },
     {
-        path:'/productos',
-        name:'Productos',
+        path:'/tarifario',
+        name:'Tariario',
         icon: <FaBox />,
     },
     {

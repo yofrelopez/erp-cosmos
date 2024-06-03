@@ -1,11 +1,8 @@
 
-
-
-import React from 'react'
 import TarifarioVidrios from '../components/tarifarios/Vidrios'
 import VistaTarifario from '../components/tablas/vistaTarifa/VistaTarifario'
 
-const TarifarioPage: React.FC = () => {
+const TarifarioPage = () => {
   return (
     <div className='container'>
       <div className='row container pt-4'>

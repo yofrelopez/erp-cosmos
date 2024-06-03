@@ -36,6 +36,8 @@ const CrudProviderCtxt:FC<Props> = ({children}) => {
                 return 3
             } else if (selection === 'Puerta') {
                 return 4
+            } else if (selection === 'Moldura') {
+                return 5
             } else {
                 return '*'
             }

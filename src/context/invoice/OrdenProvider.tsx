@@ -3,6 +3,7 @@ import { OrdenContext } from "./OrdenContext";
 import { IOrden } from "../../interface/interfaces";
 import { IOrdenItems } from "../../interface/interfaces";
 import { supabase } from "../../supabase/client";
+import { IObservacionesFetch } from "../../components/cotizaciones/Observacion";
 
 
 
@@ -19,6 +20,8 @@ const OrdenProvider:FC<Props> = ({children}) => {
     const [newOrden, setNewOrden] = useState<IOrden | null | undefined>(null)
 
     const [ordenItems, setOrdenItems] = useState<IOrdenItems>({} as IOrdenItems)
+
+    const [ observaciones, setObservaciones ] = useState<IObservacionesFetch[] | false>( false )
 
     const agregarOrden = async (orden: IOrden): Promise<boolean> => {
         try {
@@ -97,7 +100,8 @@ const OrdenProvider:FC<Props> = ({children}) => {
 
 
   return (
-    <OrdenContext.Provider value={{newOrden, agregarOrden, agregarOrdenItems, setNewOrden, ordenItems, setOrdenItems}}>
+    <OrdenContext.Provider value={{newOrden, agregarOrden, agregarOrdenItems,
+                                    setNewOrden, ordenItems, setOrdenItems, observaciones, setObservaciones}}>
         {children}
     </OrdenContext.Provider>
   )

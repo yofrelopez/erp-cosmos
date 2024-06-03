@@ -1,10 +1,11 @@
 
-import { FC, ReactNode, useState, useEffect } from 'react';
+
+import { FC, ReactNode, useState, useEffect, useContext } from 'react';
 import { CuadrosContext } from "./CuadrosContext";
 import { ICuadro } from "../../interface/interfaces";
 import { IItem } from '../../interface/interfaces';
-
-
+import { VidriosContext } from '../vidrios/VidriosContext';
+import { TarifarioContext } from '../tarifarioContext/TarifarioContext';
 
 
 
@@ -15,6 +16,9 @@ interface Props {
 
 
 const CuadrosProviderContext:FC<Props> = ({children}) => {
+
+    const { precioVidrioSimple, precioVidrioMate } = useContext(VidriosContext);    
+
 
     const [ cuadro, setCuadro ] = useState< ICuadro | null >(null);
     const [ perimetro, setPerimetro ] = useState<number>(0);
@@ -27,10 +31,40 @@ const CuadrosProviderContext:FC<Props> = ({children}) => {
     const [ itemCuadro, setItemCuadro ] = useState<IItem | null >(null);
 
 
+    const [ nombreMoldura, setNombreMoldura ] = useState<string>('');
+
     const calcularCuadro = ( dato: ICuadro ) => {
-        setCuadro( dato ); 
-           
+        setCuadro( dato );            
     }
+
+
+    // obtener lista de precios de productos de TarifarioContext
+    const { listaPreciosMolduras, listaPreciosAglomerados } = useContext(TarifarioContext);
+
+
+    useEffect(() => {
+
+        if( cuadro !== null ){
+                //asignarle nombre a molduras: 1/2" - 3/4" - 1" - 1 1/2" - 2"
+            switch (cuadro?.molduraEspesor) {
+                case 'MDM-NC': setNombreMoldura('1/2"');
+                    break;
+                case 'MDT-NC': setNombreMoldura('3/4"');
+                    break;
+                case 'MDU-NC': setNombreMoldura('1"');
+                    break;
+                case 'MDUM-MC': setNombreMoldura('1 1/2"');
+                    break;
+                case  'MDD-NC': setNombreMoldura('2"');
+                    break;
+                default: setNombreMoldura('');
+            }
+        }
+    }, [cuadro])
+
+
+
+    
 
     useEffect(() => {
          
@@ -38,12 +72,13 @@ const CuadrosProviderContext:FC<Props> = ({children}) => {
             setPerimetro( Number(cuadro.largo * 2) + Number(cuadro.alto * 2) );
             setPieCuadrado( Number(cuadro.largo) * Number(cuadro.alto) / 900 );
             switch (cuadro?.vidrio) {
-                case 'simple': setPrecioVidrio(5);
+                case 'simple': setPrecioVidrio(precioVidrioSimple);
                     break;
-                case 'mate': setPrecioVidrio(8.5);
+                case 'mate': setPrecioVidrio(precioVidrioMate);
                     break;
                 default: setPrecioVidrio(0);
             }
+            
         }
 
         if( cuadro !== null && cuadro?.margen === 'fondo'){
@@ -52,9 +87,9 @@ const CuadrosProviderContext:FC<Props> = ({children}) => {
             setPerimetro( Number(largo * 2) + Number(alto * 2) );
             setPieCuadrado( Number(largo) * Number(alto) / 900 );
             switch (cuadro?.vidrio) {
-                case 'simple': setPrecioVidrio(5);
+                case 'simple': setPrecioVidrio(precioVidrioSimple);
                     break;
-                case 'mate': setPrecioVidrio(8.5);
+                case 'mate': setPrecioVidrio(precioVidrioMate);
                     break;
                 default: setPrecioVidrio(0);
             }
@@ -63,28 +98,28 @@ const CuadrosProviderContext:FC<Props> = ({children}) => {
 
     }, [cuadro])
 
-
+    // PRECIO MOLDURA
 
     useEffect(() => {
-        if( perimetro !== 0 && pieCuadrado !== 0 ){
+        if( perimetro !== 0 && pieCuadrado !== 0 && listaPreciosMolduras !== null){
             switch (cuadro?.molduraEspesor) {
-                case 'media': setPrecioMoldura1(15);
+                case 'MDM-NC': setPrecioMoldura1(listaPreciosMolduras['MDM-NC']);
                     break;
-                case 'tres-cuartos': setPrecioMoldura1(18);
+                case 'MDT-NC': setPrecioMoldura1(listaPreciosMolduras['MDT-NC']);
                     break;
-                case 'una-pulgada': setPrecioMoldura1(23);
+                case 'MDU-NC': setPrecioMoldura1(listaPreciosMolduras['MDU-NC']);
                     break;
-                case 'pulgada-media': setPrecioMoldura1(30);
+                case 'MDUM-MC': setPrecioMoldura1(listaPreciosMolduras['MDUM-MC']);
                     break;
-                case  'dos-pulgadas': setPrecioMoldura1(35);
+                case  'MDD-NC': setPrecioMoldura1(listaPreciosMolduras['MDD-NC']);
                     break;
                 default: setPrecioMoldura1(0);
             }
             if(cuadro?.fondoTipo === 'vidrio'){
-                setSegundoVidrio( pieCuadrado * 5 );
+                setSegundoVidrio( pieCuadrado * precioVidrioSimple );
             }
-            if(cuadro?.fondoTipo === 'paspartu-nordex'){
-                setPaspartuNordex( pieCuadrado * 7.5 );
+            if(cuadro?.fondoTipo === 'paspartu-nordex' && listaPreciosAglomerados !== null){
+                setPaspartuNordex( pieCuadrado * listaPreciosAglomerados['PASP-PRE'] );
             }
         }
     }, [perimetro, pieCuadrado, paspartuNordex])
@@ -103,6 +138,10 @@ const CuadrosProviderContext:FC<Props> = ({children}) => {
     }, [precioMoldura1, segundoVidrio])
 
 
+
+    // enviar moldura Espesor
+
+
     useEffect(() => {        
 
 
@@ -117,7 +156,7 @@ const CuadrosProviderContext:FC<Props> = ({children}) => {
                     `${cuadro?.fondoTipo === 'paspartu-nordex' ? 'Paspartu Nordex - ' : ''}` + 
                     `${cuadro?.fondoTipo === 'vidrio' ? 'Doble Vidrio - ' : ''}` +
                     `${cuadro?.margen === 'fondo' ? `Color de fondo: ${cuadro?.fondoColor} - ` : ''}` +
-                    `Vidrio: ${cuadro?.vidrio} - Moldura: ${cuadro?.molduraEspesor} - ` +
+                    `Vidrio: ${cuadro?.vidrio} - Moldura: ${nombreMoldura} - ` +
                     `${cuadro?.molduraTextura} - ${cuadro?.molduraColor}`,
                 pUnitario: precioCuadroTotal,
                 cantidad: cuadro?.cantidad!,
@@ -139,6 +178,11 @@ const CuadrosProviderContext:FC<Props> = ({children}) => {
             setPaspartuNordex(0);
         }
     }, [precioCuadroTotal])
+
+    useEffect(() => {
+        console.log('Precio Vidrio Context Cuadro: ', precioVidrio, precioVidrioSimple, precioVidrioMate)
+    }
+    , [precioVidrio])
 
 
   return (

@@ -1,4 +1,5 @@
 import React, { useState, ReactNode, useEffect, useContext } from 'react';
+
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Table } from 'reactstrap';
 import { modalQuote } from '../../interface/interfaces';
 import { supabase } from '../../supabase/client';
@@ -6,6 +7,13 @@ import { AuthContext } from '../../context/auth/AuthContext';
 import { generatePDF } from '../../utils/pdfGenerator';
 import { QuoteProducts } from '../../interface/interfaces';
 import { clientContact } from '../../interface/interfaces';
+import { FaBox, FaCalendarCheck, FaCircleNotch, FaFileContract } from 'react-icons/fa';
+
+import { useForm } from "react-hook-form";
+import Swal from 'sweetalert2';
+import Observacion from './Observacion';
+import { OrdenContext } from '../../context/invoice/OrdenContext';
+
 
 
 
@@ -16,19 +24,40 @@ interface QuoteModalProps {
   contactClient?: clientContact;
 }
 
+interface OrderProps {
+  ordenType: string;
+  estadoServicio: string;
+  estadoEntrega: string;
+  fechaEntrega: string;
+}
+
 
 
 const QuoteModal: React.FC<QuoteModalProps> = ({ buttonLabel, className, quote }) => {
 
   const { isLoggedIn } = useContext(AuthContext)
 
+  const { observaciones } = useContext(OrdenContext) // 
+
   const [products, setProducts] = useState<QuoteProducts[] | [] >([])
 
   const [contact, setContact] = useState<clientContact | undefined>(undefined)
 
+  const [order, setOrder] = useState<OrderProps | null>(null)
+
+  const [editarActivo, setEditarActivo] = useState<boolean>(false)
+
   const [modal, setModal] = useState(false);
 
-  const toggle = () => setModal(!modal);
+
+
+  const toggle = () => {
+
+    setModal(!modal);
+    if(editarActivo === true){
+      setEditarActivo(false)
+    }  
+  }
 
 
 
@@ -60,14 +89,109 @@ const QuoteModal: React.FC<QuoteModalProps> = ({ buttonLabel, className, quote }
     }
     setContact(data?.[0] as clientContact)
   }
+
+  // hacer una consulta a supabase para traer de la tabla "ordenes", el ordenType,
+  // el estadoServicio, el estadoEntrega y la fechaEntregan de la orden que coincida con el id_orden de la tabla ordenes
+  
+    const fetchOrder = async () => {
+
+      const { data, error } = await supabase
+        .from('ordenes')
+        .select('ordenType, estadoServicio, estadoEntrega, fechaEntrega')
+        .eq('id_orden', quote.id_orden)
+      if (error) {
+        console.log(error)
+        return
+      }
+
+      setOrder(data?.[0] as OrderProps)
+    }
+
+
+    // Form
+
+    const { register, reset, handleSubmit, formState: { errors } } = useForm<OrderProps>({
+
+        defaultValues: {
+          ordenType: order?.ordenType,
+          estadoServicio: order?.estadoServicio,
+          estadoEntrega: order?.estadoEntrega,
+          fechaEntrega: order?.fechaEntrega
+
+        }
+    });
+
+    const onSubmit = async (data: OrderProps) => {
+
+      console.log('Data del UseForm:', data)
+
+      Swal.fire({
+        title: 'Estas seguro?',
+        text: "No podras revertir esta accion!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, guardar!'
+      }).then(async (result) => {
+        // hacer un update a la tabla ordenes, donde el id_orden sea igual al quote.id_orden
+      // y actualizar los campos ordenType, estadoServicio, estadoEntrega y fechaEntrega con los datos del formulario
+        if (result.isConfirmed) {
+            if(data !== order){
+              const { error } = await supabase
+                .from('ordenes')
+                .update({
+                  ordenType: data.ordenType,
+                  estadoServicio: data.estadoServicio,
+                  estadoEntrega: data.estadoEntrega,
+                  fechaEntrega: data.fechaEntrega
+                })
+                .eq('id_orden', quote.id_orden)
+              if (error) {
+                console.log(error)
+                return
+              }
+              setEditarActivo(false)
+              fetchOrder()
+            } else {
+              console.log('No hay cambios')
+            }
+        }
+      })     
+
+    }
+
+
+
+
+    const cancelarEdicion = () => {
+      console.log('cancelar edicion')
+      setEditarActivo(false)
+    }
+
+
+
+
   
   
   useEffect(() => {
     if(isLoggedIn){
       fetchData()
       fetchContact()
+      fetchOrder()
     }
   }, [isLoggedIn])
+
+  useEffect(() => {
+    if(order){
+      reset({
+        ordenType: order.ordenType,
+        estadoServicio: order.estadoServicio,
+        estadoEntrega: order.estadoEntrega,
+        fechaEntrega: order.fechaEntrega
+      })
+    }
+  }, [order])
 
   const date = new Date(quote.created_at)
   
@@ -76,7 +200,7 @@ const QuoteModal: React.FC<QuoteModalProps> = ({ buttonLabel, className, quote }
     <div>
       <Button className='btn-sm' color="light" onClick={toggle}>{buttonLabel}</Button>
       <Modal isOpen={modal} toggle={toggle} size='xl' className={className}>
-        <ModalHeader toggle={toggle}>Cotización ID: {quote.id_serie}</ModalHeader>
+        <ModalHeader toggle={toggle}>{`${quote.ordenType} ID: ${quote.id_serie}`}</ModalHeader>
         <ModalBody>
           <h5>Información del Cliente</h5>
           <div className='row d-flex'>
@@ -94,7 +218,138 @@ const QuoteModal: React.FC<QuoteModalProps> = ({ buttonLabel, className, quote }
             </div>
           </div>
 
-          <h5>Productos</h5>
+          <div className='container py-4 bg-body-tertiary'>
+
+            {
+              editarActivo === true && (
+                <form  onSubmit={handleSubmit(onSubmit)}>
+                  <div className='row'>
+
+
+                    <div className='col-6'>
+                      <div className="form-group mb-3 col-6">
+                        <label htmlFor="ordenType">Tipo de documento</label>
+                        <div>
+                          <select id='ordenType' className="form-select" {...register('ordenType', { required: true })}>
+                            <option value='Proforma'>Proforma</option>
+                            <option value='Contrato'>Contrato</option>
+                          </select>
+                        </div>
+                        {errors.ordenType && <span className="text-danger">Este campo es requerido</span>}
+                      </div>
+                    </div>
+
+
+
+
+                    <div className='col-6'>
+                      <div className="form-group mb-3 col-6">
+                        <label htmlFor='estadoServicio'>Estado del Servicio</label>
+                        <select className="form-select" {...register('estadoServicio', { required: true })}>
+                          <option value="Pendiente">Pendiente</option>
+                          <option value="En-Proceso">En Proceso</option>
+                          <option value="Terminado">Terminado</option>
+                        </select>
+                        {errors.estadoServicio && (
+                          <span className="text-danger">Este campo es requerido</span>
+                        )}
+                      </div>
+                    </div>
+
+
+
+
+
+
+                    <div className='col-6'>
+                      <div className="form-group mb-3 col-6">
+                        <label htmlFor='estadoEntrega'>Estado de Entrega</label>
+                        <select className="form-select" {...register('estadoEntrega', { required: true })}>
+                          <option value="Pendiente">Pendiente</option>
+                          <option value="Entregado">Entregado</option>
+                        </select>
+                        {errors.estadoEntrega && (
+                          <span className="text-danger">Este campo es requerido</span>
+                        )}
+                      </div>
+                    </div>
+
+
+
+
+
+                    <div className='col-6'>
+                    <div className="form-group mb-3 col-6">
+                      <label htmlFor='fechaEntrega'>Fecha de Entrega</label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        min={new Date().toISOString().split('T')[0]}
+                        {...register('fechaEntrega', { required: true })}
+                      />
+                      {errors.fechaEntrega && <span className="text-danger">Este campo es requerido</span>}
+                    </div>
+                    </div>
+
+
+
+
+
+
+                  </div>
+
+                  <div className='d-flex justify-content-center pt-4'>
+                    <button type='submit' className='btn btn-outline-warning btn-sm me-4'>Guardar</button>
+                    <button type='button' onClick={cancelarEdicion} className='btn btn-outline-info btn-sm me-4'>Cancelar</button>
+                  </div>
+
+
+                </form>
+              )
+            }
+
+            {
+              editarActivo === false && (
+                <div className='row gx-5'>
+                  <div className='col'>
+                  <FaFileContract className="text-warning"/><span> {order?.ordenType} </span>
+                  </div>
+                  <div className='col'>
+                  <FaCircleNotch className="text-warning" /> <span>{order?.estadoServicio}</span>
+                  </div>
+                  <div className='col'>
+                  <FaBox className="text-warning" /> <span>{order?.estadoEntrega}</span> 
+                  </div>
+                  <div className='col'>
+                  <FaCalendarCheck className="text-warning" /> <span>{order?.fechaEntrega}</span>
+                  </div> 
+                </div>
+
+              )
+            }
+
+
+
+
+            <div className='d-flex justify-content-center pt-4'>
+              {
+                editarActivo === false &&
+                <button
+                  type='button'
+                  className='btn btn-outline-primary btn-sm me-4'
+                  onClick={() => setEditarActivo(true)}                  
+                  >Editar</button>
+              }    
+
+            </div>
+
+
+          </div>
+
+          <div className='pt-4'>
+            <h5>Productos</h5>
+
+          </div>
           <Table>
             <thead>
               <tr>
@@ -121,13 +376,15 @@ const QuoteModal: React.FC<QuoteModalProps> = ({ buttonLabel, className, quote }
               ))}
             </tbody>
           </Table>
+          <Observacion quote={quote}/>
         </ModalBody>
         <ModalFooter className='d-flex justify-content-between'>
           
           <Button color="warning" onClick={toggle}>Cerrar</Button>
-          <Button color="primary" onClick={()=>generatePDF(quote, products, contact)}>Descargar PDF</Button>
+          <Button color="primary" onClick={() => generatePDF({ observaciones: observaciones ? observaciones : [] }, quote, products, contact)}>Descargar PDF</Button>
           <h5>Total: S/.{quote.total.toFixed(2)}</h5>
-        </ModalFooter>
+        </ModalFooter>        
+        
       </Modal>
     </div>
   );

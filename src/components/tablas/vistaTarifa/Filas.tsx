@@ -16,7 +16,27 @@ const Filas:FC<Props> = ({item}) => {
 
   const { deleteTarifarioVidrios, setProductoParaActualizar } = useContext(CrudContext)
 
-  const categoria = item?.categoria === 1 ? 'Vidrio' : 'Espejo'
+  /* const categoria = item?.categoria === 1 ? 'Vidrio' : 'Espejo' */
+
+  // crear una variable "categoria"  yasignarle un nombre dependiendo del valor de item?.categoria
+
+  let categoria = ''
+  if(item?.categoria === 1){
+    categoria = 'Vidrio'
+  } else if (item?.categoria === 2) {
+    categoria = 'Espejo'
+  } else if (item?.categoria === 3) {
+    categoria = 'Ventana'
+  } else if (item?.categoria === 4) {
+    categoria = 'Puerta'
+  } else if (item?.categoria === 5) {
+    categoria = 'Moldura'
+  } else if (item?.categoria === 6) {
+    categoria = 'Aglomerados'
+  } else {
+    categoria = 'Categoria no definida'
+  }
+
 
 
   const handleDelete = (id: number | undefined) => {

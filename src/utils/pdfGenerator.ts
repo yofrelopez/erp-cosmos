@@ -3,10 +3,15 @@ import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable'
 import { clientContact, modalQuote } from "../interface/interfaces";
 import { QuoteProducts } from "../interface/interfaces";
+import { IObservacionesFetch } from "../components/cotizaciones/Observacion";
 
 
 
-export const generatePDF = (quote: modalQuote, products: QuoteProducts[]|[], contact: clientContact | undefined ) => {
+
+export const generatePDF = (observaciones: {observaciones: IObservacionesFetch[] | []} , quote: modalQuote, products: QuoteProducts[]|[], contact: clientContact | undefined ) => {
+
+
+
   const doc = new jsPDF();
 
   const aspectRatio = 1.96; // La relación de aspecto de la imagen
@@ -28,7 +33,7 @@ export const generatePDF = (quote: modalQuote, products: QuoteProducts[]|[], con
  
    // Añade la identificación del documento en la columna de la derecha
    doc.setFontSize(18); // Letras de tamaño principal
-   doc.text('COTIZACIÓN VC-0' + quote.id_serie, 120, 30); // Ajusta la coordenada x para mover el texto a la derecha
+   doc.text(`${quote.ordenType}VC-0` + quote.id_serie, 120, 30); // Ajusta la coordenada x para mover el texto a la derecha
  
 // Añade la fecha y el ID del cliente en una "tabla" con dos columnas
 const fecha = new Date(quote.created_at);
@@ -103,6 +108,41 @@ const fecha = new Date(quote.created_at);
 
    });
 
+
+   // Obtener la posición Y después de la tabla
+  const finalY = (doc as any).lastAutoTable.finalY + 10;
+
+  // Añadir la sección de observaciones
+  doc.setFontSize(12);
+  doc.setFillColor(240, 240, 240); // Color de fondo
+  doc.rect(20, finalY, 50, 8, 'F'); // Dibuja el rectángulo
+  doc.setTextColor(0, 0, 0); // Color de texto
+  doc.text('Observaciones', 22, finalY + 6); // Añade el texto
+
+  // Añade las observaciones
+  doc.setFontSize(10); // Tamaño de letra más pequeño para los datos
+  doc.setTextColor(0, 0, 0); // Color de texto
+  let y = finalY + 15;
+
+
+  // recorrer el arreglo 'observaciones' y agregar cada observación
+  observaciones.observaciones.forEach((obs) => {
+    const fecha = new Date(obs.created_at);
+    doc.text(`${obs.item}. ${obs.observacion} (${fecha.toLocaleDateString()})`, 22, y);
+    y += 5;  });
+
+
+
+
+
+
+
+  
+   
+
+
+
+
    // Agregar paginación y pie de página a todas las páginas con un bucle
     const pageCount = (doc as any).getNumberOfPages();
     for(let i = 1; i <= pageCount; i++) {
@@ -125,6 +165,6 @@ const fecha = new Date(quote.created_at);
 
 
  
-   // Guarda el archivo PDF
-   doc.save('cotizacion.pdf');
+   // Guarda el archivo PDF con el nombre quote.id_serie
+   doc.save(`${quote.ordenType}_VC-0 ${quote.id_serie}.pdf`);
 };
